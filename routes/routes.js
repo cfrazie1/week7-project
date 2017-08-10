@@ -7,7 +7,7 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 const bodyParser = require('body-parser');
 
 mongoose.Promise = require('bluebird');
-mongoose.createConnection("mongodb://localhost:27017/statTracker");
+mongoose.connect("mongodb://localhost:27017/statTracker");
 
 router.use(passport.authenticate('basic', {session: false}));
 
@@ -51,15 +51,19 @@ const stats = mongoose.model('stats', statsSchema);
 
 
 router.get('/api/activities', function(req, res){
+  console.log("Inside endpoint");
   activities.find({}).then(function(allActivities){
+    console.log(allActivities);
     if(allActivities){
+      console.log("got stuff");
       res.setHeader('Content-Type', 'application/json');
         res.status(200).json(allActivities);
     } else {
       res.send("No activities found")
     }
   }).catch(function(err) {
-      res.status(400).send("Bad request. Please try again.");
+    console.log("error");
+      res.status(400).json("Bad request. Please try again.");
     });
 });
 
