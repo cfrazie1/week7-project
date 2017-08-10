@@ -7,17 +7,17 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 const bodyParser = require('body-parser');
 
 mongoose.Promise = require('bluebird');
-mongoose.connect("mongodb://localhost:27017/statTracker");
+mongoose.createConnection("mongodb://localhost:27017/statTracker");
 
 router.use(passport.authenticate('basic', {session: false}));
 
-const users = {
+const theUser = {
   "curtis" : "frazier"
 };
 
 passport.use(new BasicStrategy(
   function(username, password, done) {
-      const userPassword = user[username];
+      const userPassword = theUser[username];
       if (!userPassword) { return done(null, false); }
       if (userPassword !== password) { return done(null, false); }
       return done(null, username);
@@ -48,9 +48,7 @@ const users = mongoose.model('users', userSchema);
 const activities = mongoose.model('activities', activitySchema);
 const stats = mongoose.model('stats', statsSchema);
 
-const user = {
-  "davis": "password"
-}
+
 
 router.get('/api/activities', function(req, res){
   activities.find({}).then(function(allActivities){
